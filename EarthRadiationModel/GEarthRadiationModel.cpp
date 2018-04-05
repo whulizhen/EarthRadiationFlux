@@ -217,27 +217,28 @@ namespace gfc
         std::vector< std::vector<GVertex> > allVer; // all the vertex in all the level
         m_TriGrid =  myico.createGeometry( m_level,allVer);  //m_TriGrid is all the triangles in all level
         
-        int outputLevel = 1;
+        int outputLevel = 6;
+        
         
 //        //output all the vetex in level m_level
-//        FILE* pf  = fopen("myvertex.js","w+");
+//        FILE* pf  = fopen("myvertex_level6.js","w+");
 //        outputVertice_js(allVer[outputLevel], pf);
 //        if( pf != NULL )
 //        {
 //            fclose(pf);
 //            pf = NULL;
 //        }
-//        
+//
 //        //output all the vetex in level m_level
-//        pf  = fopen("myfaces.js","w+");
+//        pf  = fopen("myfaces_level6.js","w+");
 //        outputTri_js(m_TriGrid[outputLevel], pf);
 //        if( pf != NULL )
 //        {
 //            fclose(pf);
 //            pf = NULL;
 //        }
-        
-        int testc =0;
+//
+//        int testc =0;
         
     }
     
@@ -1539,7 +1540,7 @@ double GEarthRadiationModel::countingStars(PolygonAreaExact poly, gfc::GVertex *
             // from the start point to the end point , should be in counterclockwise order
             double pointC[2] ={0}, pointD[2] = {0};
             double intersectionPoint[2]={0.0};
-            std::vector<double> tmpvalue;
+            std::vector<double> tmpvalue; //store the latitude of intersections
             for( int g = 0 ; g< 3; g++ )
             {
                 int k = g + 1;
@@ -1635,7 +1636,7 @@ double GEarthRadiationModel::countingStars(PolygonAreaExact poly, gfc::GVertex *
                 
                 break;
             }
-            
+            // if the vertex is inside the grid
             for( int i = 0 ; i< 3; i++ )
             {
                 if( p[i].getLon()>= iter-interval[1] && p[i].getLon()<iter)
@@ -1767,8 +1768,8 @@ double GEarthRadiationModel::countingStars(PolygonAreaExact poly, gfc::GVertex *
                     pointD[0] = p[t].getLat(); pointD[1] = p[t].getLon();
                     double section[2]={0.0};
                     //bool IsIntersection = intersection_2D(point3, point4, pointC, pointD, section);
-                    bool IsIntersection = SphereIntersection( point3[0], point3[1], point4[0],
-                                                             point4[1], pointC[0], pointC[1],
+                    bool IsIntersection = SphereIntersection( point4[0], point4[1], point3[0],
+                                                             point3[1], pointC[0], pointC[1],
                                                              pointD[0], pointD[1], section[0],
                                                              section[1]);
                     if( IsIntersection == true )
@@ -1852,7 +1853,10 @@ double GEarthRadiationModel::countingStars(PolygonAreaExact poly, gfc::GVertex *
                     printf("warning: area1 is negative!!\n");
                 }
                 poly.Clear();
-                poly.AddPoint(point1[0], point1[1]);poly.AddPoint(point2[0], point2[1]);poly.AddPoint(point3[0], point3[1]);poly.AddPoint(point4[0], point4[1]);
+                poly.AddPoint(point1[0], point1[1]);
+                poly.AddPoint(point2[0], point2[1]);
+                poly.AddPoint(point3[0], point3[1]);
+                poly.AddPoint(point4[0], point4[1]);
                 double myarea2 =0.0;
                 poly.Compute(false, true, perimeter, myarea2);
                 if( myarea2 < 0 )

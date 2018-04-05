@@ -507,7 +507,7 @@ namespace gfc
             m_level = 0 ;
             originalShape();
             
-            pf = fopen("triNet.data","w+");
+            //pf = fopen("triNet.data","w+");
         }
         
         void setRadius( double radius )
